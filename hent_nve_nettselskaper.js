@@ -1,17 +1,17 @@
 /**
- * GENERATOR v6.0: Intelligent navnevask og databasebygger
- * * FIKSET: Stopper for aggressiv fjerning av bokstaver (f.eks. Lede -> L).
- * * FORBEDRET: Bruker "Boundary" \b i regex for å kun fjerne hele ord som AS/SA.
+ * GENERATOR v6.1: Intelligent navnevask og databasebygger
+ * * FIKSET: Håndterer nå selskaper med samme Org-nr i flere fylker (f.eks. Glitre).
+ * * FORBEDRET: Sjekker både Org-nr og Fylke før den slår sammen duplikater.
  */
 async function generateSmartDB() {
   const url = "https://nettleietariffer.dataplattform.nve.no/v1/NettleiePerOmradePrManedHusholdningFritidEffekttariffer?FraDato=2026-01-01&Tariffgruppe=Husholdning&Kundegruppe=1";
   const priserUrlBase = "https://nettleietariffer.dataplattform.nve.no/v1/NettleiePerOmradePrTimeHusholdningFritidEffekttariffer?ValgtDato=2026-02-16&Tariffgruppe=Husholdning";
 
   const fylkeOppslag = {
-    "03": "Oslo", "11": "Rogaland", "15": "Møre_Romsdal", "18": "Nordland",
-    "31": "Østfold", "32": "Akershus", "33": "Buskerud", "34": "Innlandet",
+    "03": "Oslo", "11": "Rogaland", "15": "More_Romsdal", "18": "Nordland",
+    "31": "Ostfold", "32": "Akershus", "33": "Buskerud", "34": "Innlandet",
     "39": "Vestfold", "40": "Telemark", "42": "Agder", "46": "Vestland",
-    "50": "Trøndelag", "55": "Troms", "56": "Finnmark"
+    "50": "Trondelag", "55": "Troms", "56": "Finnmark"
   };
 
   try {
@@ -21,7 +21,7 @@ async function generateSmartDB() {
     let tempDB = {};
     let priceFingerprints = {}; 
 
-    log(`⏳ Analyserer ${rawData.length} områder... Dette tar litt tid.`);
+    log(`⏳ Analyserer ${rawData.length} områder...`);
 
     for (const item of rawData) {
       const org = item.organisasjonsnr.replace(/[^0-9]/g, '');
@@ -36,36 +36,32 @@ async function generateSmartDB() {
         const natt = pData.find(o => o.time === 0)?.energileddInk;
         const fingerprint = `${getP(0)}|${getP(2)}|${getP(5)}|${getP(10)}|${getP(15)}|${getP(20)}|${dag}|${natt}`;
 
-        if (!priceFingerprints[org]) priceFingerprints[org] = [];
-        if (priceFingerprints[org].includes(fingerprint)) continue;
-        priceFingerprints[org].push(fingerprint);
+        // Fingerprint-sjekk per Org-nr og Fylke
+        const fPrintKey = `${org}_${fylke}`;
+        if (!priceFingerprints[fPrintKey]) priceFingerprints[fPrintKey] = [];
+        if (priceFingerprints[fPrintKey].includes(fingerprint)) continue;
+        priceFingerprints[fPrintKey].push(fingerprint);
 
-        // --- FORBEDRET NAVNEVASK ---
         let navnOriginal = item.konsesjonar;
-        
-        // Fjerner kun HELE ord (AS, SA, NETT, KRAFT, ENERGI, ELVERK)
-        // Bruker \b for å unngå at "Lede" blir "L" (fordi "de" finnes i listen)
         let navn = navnOriginal
           .replace(/\b(AS|SA|NETT|KRAFT|ENERGI|ELVERK|STRØM|FORSYNING)\b/gi, '')
           .replace(/Vesterål/gi, 'Vestall')
           .trim();
 
-        // Sikkerhetsmekanisme: Hvis navnet ble for kort (< 3 tegn), bruk originalen (uten AS)
         if (navn.length < 3) {
             navn = navnOriginal.replace(/\b(AS|SA)\b/gi, '').trim();
         }
         
-        // Formatering til Camel_Case_Underscore
         navn = navn.split(/[\s-]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('_')
-               .replace(/^_+|_+$/g, '');
+                   .replace(/^_+|_+$/g, '');
 
         let finalId = navn.toLowerCase();
 
-        // Håndtering av duplikater med fylkesnavn
+        // FIKS: Sjekker både Org og Fylke for å fange opp Glitre Buskerud vs Glitre Agder
         if (tempDB[finalId] && (tempDB[finalId].org !== org || tempDB[finalId].fylke !== fylke)) {
-          const fylkeNavn = fylkeOppslag[fylke] || fylke;
-          finalId = `${finalId}_${fylkeNavn.toLowerCase()}`;
-}
+            const fylkeNavn = fylkeOppslag[fylke] || fylke;
+            finalId = `${finalId}_${fylkeNavn.toLowerCase()}`;
+        }
 
         tempDB[finalId] = { org: org, fylke: fylke };
       }
@@ -73,7 +69,7 @@ async function generateSmartDB() {
 
     const sortedKeys = Object.keys(tempDB).sort();
 
-    log(`\n--- KOPIER DENNE BLOKKEN (v6.0) ---`);
+    log(`\n--- KOPIER DENNE BLOKKEN (v6.1) ---`);
     log(`const db = {`);
     sortedKeys.forEach((key, index) => {
       const entry = tempDB[key];
