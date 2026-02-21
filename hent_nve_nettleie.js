@@ -5,9 +5,10 @@
  * VERSJON: 11.8 (Optimalisert for Strømregning-app & Homey Pro 2023)
  * KREDITT: Takk til Tom Andreas H. Abrahamsen & Kai Engvik for bug-fix (verdi > 5)
  * ============================================================================
+
+ 
  * * KONFIGURASJON (Prioritet: Flow-argument overstyrer disse verdiene):
  */
-
 const NETTSELSKAP = "Elvia";      // Ditt nettselskap (f.eks "Lnett", "BKK", "Arva")
 const TARIFF_TYPE = "Husholdning"; // Valg: "Husholdning" eller "Hytter og fritidshus"
 
