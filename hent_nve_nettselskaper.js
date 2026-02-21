@@ -62,10 +62,10 @@ async function generateSmartDB() {
         let finalId = navn.toLowerCase();
 
         // Håndtering av duplikater med fylkesnavn
-        if (tempDB[finalId] && tempDB[finalId].org !== org) {
-            const fylkeNavn = fylkeOppslag[fylke] || fylke;
-            finalId = `${finalId}_${fylkeNavn.toLowerCase()}`;
-        }
+        if (tempDB[finalId] && (tempDB[finalId].org !== org || tempDB[finalId].fylke !== fylke)) {
+          const fylkeNavn = fylkeOppslag[fylke] || fylke;
+          finalId = `${finalId}_${fylkeNavn.toLowerCase()}`;
+}
 
         tempDB[finalId] = { org: org, fylke: fylke };
       }
