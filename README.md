@@ -14,3 +14,9 @@ Dette skriptet henter offisielle nettleiepriser (energiledd og kapasitetsledd) d
 1. Kopier koden fra `hent_nve_nettleie.js` i dette prosjektet.
 2. Opprett et nytt skript i Homey Web App.
 3. Tilpass `NETTSELSKAP` øverst i koden til ditt selskap (f.eks. "Elvia").
+
+## Tilleggsverktøy
+I dette prosjektet finner du også hjelpeskript for feilsøking:
+* `hent_nve_nettselskaper.js`: Brukes for å finne nøyaktig navn på ditt nettselskap slik NVE har lagret det.
+* `test_nve_kapasitetledd.js`: Tester kun uthenting av fastledd/kapasitetstrinn.
+* `test_nve_nettleiepris.js`: En ren testfil for å sjekke rådata fra NVEs API.
