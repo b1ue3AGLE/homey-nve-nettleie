@@ -2,7 +2,7 @@
  * ============================================================================
  * PROSJEKT: UNIVERSAL NETTLEIE-OPPDATERER (NVE-DATA)
  * UTVIKLET AV: Glenn Pedersen / I samarbeid med Homey-miljøet
- * VERSJON: 11.8 (Optimalisert for Strømregning-app & Homey Pro 2023)
+ * VERSJON: 11.8 (Optimalisert for Strømregning-app)
  * KREDITT: Takk til Tom Andreas H. Abrahamsen & Kai Engvik for bug-fix (verdi > 5)
  * ============================================================================
  * * KONFIGURASJON (Prioritet: Flow-argument overstyrer disse verdiene):
