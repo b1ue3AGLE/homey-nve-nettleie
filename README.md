@@ -1,5 +1,6 @@
 # homey-nve-nettleie
 homey-pro  nve  nettleie  javascript  smart-home
+
 # NVE Nettleie-henter for Homey Pro 🇳🇴
 
 Dette skriptet henter offisielle nettleiepriser (energiledd og kapasitetsledd) direkte fra NVEs API. Det er spesialtilpasset for å fungere sømløst med **Strømregning-appen** i Homey.
@@ -7,7 +8,8 @@ Dette skriptet henter offisielle nettleiepriser (energiledd og kapasitetsledd) d
 ## Funksjoner
 * **Automatisk konvertering:** Regner om fra øre til kroner (kr/kWh) for å unngå "0-feil" i Strømregning-appen.
 * **Universal:** Fungerer for alle norske nettselskaper via NVE-databasen.
-* **Støtter Tariffgrupper:** Velg mellom `Husholdning` eller `Hyttter og fritidshus`.
+* **Intelligent database:** Skriptet gjenkjenner automatisk om ditt nettselskap har identiske priser i flere fylker og serverer deg den enkleste konfigurasjonen mulig (72 unike prismodeller støttes).
+* **Støtter Tariffgrupper:** Velg mellom `Husholdning` eller `Hytter og fritidshus`.
 * **Smart dato:** Henter automatisk priser for neste arbeidsdag hvis det kjøres i helgen.
 
 ## Oppsett
