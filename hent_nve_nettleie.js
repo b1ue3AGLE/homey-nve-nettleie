@@ -5,11 +5,10 @@
  * VERSJON: 11.8 (Optimalisert for Strømregning-app & Homey Pro 2023)
  * KREDITT: Takk til Tom Andreas H. Abrahamsen & Kai Engvik for bug-fix (verdi > 5)
  * ============================================================================
-
- 
  * * KONFIGURASJON (Prioritet: Flow-argument overstyrer disse verdiene):
  */
-const NETTSELSKAP = "Elvia";      // Ditt nettselskap (f.eks "Lnett", "BKK", "Arva")
+
+const NETTSELSKAP = "mellom";      // Ditt nettselskap (f.eks "Lnett", "BKK", "Arva")
 const TARIFF_TYPE = "Husholdning"; // Valg: "Husholdning" eller "Hytter og fritidshus"
 
 /**
@@ -163,8 +162,9 @@ async function oppdaterNettleieNVE() {
 
         for (let k in cap) {
             const tagName = `nve_nett_cap_${k.replace('-', '_')}`;
-            await tag(tagName, Number(cap[k]));
-            log(`🏷️  [${tagName}]`.padEnd(30) + `-> ${cap[k].toFixed(0)} kr`);
+            const rundetPris = Math.round(cap[k]); // Lager det runde tallet her
+            await tag(tagName, rundetPris); // Lagrer det runde tallet som Number i Homey
+            log(`🏷️  [${tagName}]`.padEnd(30) + `-> ${rundetPris} kr`); // Viser det runde tallet i loggen
         }
 
         log(`------------------------------------------------------------`);
