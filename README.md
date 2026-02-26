@@ -1,6 +1,3 @@
-homey-nve-nettleie
-homey-pro nve nettleie javascript smart-home
-
 NVE Nettleie-henter for Homey Pro 🇳🇴
 Dette skriptet henter offisielle nettleiepriser (energiledd og kapasitetsledd) direkte fra NVEs API (Grid Tariffs API). Det er spesialtilpasset for å fungere sømløst med Strømregning-appen i Homey for presis kostnadskontroll.
 
